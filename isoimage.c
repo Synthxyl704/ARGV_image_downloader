@@ -10,9 +10,14 @@ size_t writeDataToLocalFile(void *ptr, size_t size, size_t nmemb, FILE *stream) 
                                                                                   //stream = opens ptr to a file where i have to save the data to
 }
 
+int imageUseCounter = 1;
+char bufferForFileName[0x7F];
+
 int main(int argc, char **argv) {
   char siteImgURL[0x400];     // going to store the site URL here
-  const char *outputFilename = ("std.jpg", imageUseCounter);
+  sprintf(bufferForFileName, "iso[%d].jpg", imageUseCounter);
+  const char *outputFilename = bufferForFileName;
+
   CURL *curl;
   FILE *filePointer;          // destination file pointer here
   CURLcode response;          // result status of a CURL op and also to start executing the func later on
