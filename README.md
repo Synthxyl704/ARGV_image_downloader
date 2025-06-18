@@ -1,6 +1,7 @@
 
 # ARGV image downloader
 A fun C project I wrote for extending my knowledge in network programming and client URL handlings and stuff.
+Very, VERY easy to use terminal based image downloader using argument vector(s) straight into your required directory.
 
 
 ## Linux/Terminal running commands and important notice[s]
