@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <curl/curl.h>
+#include <unistd.h>
 
 // [S1] - write site linked data to a local file
 size_t writeDataToLocalFile(void *ptr, size_t size, size_t nmemb, FILE *stream) { // nmemb = number of elements to write to the file 
@@ -12,17 +13,31 @@ size_t writeDataToLocalFile(void *ptr, size_t size, size_t nmemb, FILE *stream) 
 
 int imageUseCounter = 1;
 char bufferForFileName[0x7F];
+char buffer2ForFileNameVerification[0x7F];
 
 int main(int argc, char **argv) {
   char siteImgURL[0x400];     // going to store the site URL here
-  sprintf(bufferForFileName, "iso[%d].jpg", imageUseCounter);
-  const char *outputFilename = bufferForFileName;
 
+  // logic for not overrwriting the exisitng file, insteaf make another one while retaining previous ones
+  while (1 == 1) {
+    snprintf(buffer2ForFileNameVerification, sizeof(buffer2ForFileNameVerification), "./iso[%d].jpg", imageUseCounter);
+
+    if (access(buffer2ForFileNameVerification, F_OK) != 0) {
+      break;
+    } else {
+      imageUseCounter += 1;
+    }
+  }
+
+  // set the output filename (retain original buffer for actual writing)
+  snprintf(bufferForFileName, sizeof(bufferForFileName), "./iso[%d].jpg", imageUseCounter);
+
+  const char *outputFilename = bufferForFileName;
   CURL *curl;
   FILE *filePointer;          // destination file pointer here
   CURLcode response;          // result status of a CURL op and also to start executing the func later on
 
-  // gonna use cmd line because way cooler
+  // use argument vectors for making file count easier? (truth: looks cooler and easier)
   if (argc > 1) {
     strncpy(siteImgURL, argv[1], sizeof(siteImgURL) - 0x1);  // copy argv[1] (link) into siteImgURL buffer
     siteImgURL[sizeof(siteImgURL) - 1] = '\0';              
