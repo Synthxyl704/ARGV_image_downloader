@@ -23,8 +23,8 @@ Remember to change the file pointer to the actual directory you want to store th
 Linux terminal:
 ```
 -> cd <directory_of_storage>
--> gcc isoimage.c -o isoimg -lcurl
--> ./isoimg <link_to_image>
+-> gcc isoimg.c curl_utils.c magickwand.c -o isoimg `pkg-config --cflags --libs MagickWand` -lcurl
+-> ./isoimg '<link_to_image>' <WIDTHxHEIGHT>
 ```
 
 ## Definitely not FAQs again
