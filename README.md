@@ -1,5 +1,5 @@
 
-# ARGV image downloader
+# ARGV image downloader (aka ARGVTD)
 A fun C project I wrote for extending my knowledge in network programming and client URL handlings and stuff.
 Very, VERY easy to use terminal based image downloader using argument vector(s) straight into your required directory.
 
@@ -25,6 +25,12 @@ Linux terminal:
 -> cd <directory_of_storage>
 -> gcc isoimg.c curl_utils.c magickwand.c -o isoimg `pkg-config --cflags --libs MagickWand` -lcurl
 -> ./isoimg '<link_to_image>' <WIDTHxHEIGHT>
+```
+
+ARGVTD stand error notational expository:
+```
+//follows my ARX compiler error format created by me for readability and easier intrinsic debugging
+| [:] program standard | [::] program + argv/user standard | [:::] amelioration/debug tweak string       
 ```
 
 ## Definitely not FAQs again
