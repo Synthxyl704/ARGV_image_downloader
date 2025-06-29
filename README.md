@@ -9,7 +9,7 @@ Very, VERY easy to use terminal based image downloader using argument vector(s) 
 Clone the project using this command onto bash:
 
 ```bash
-git clone https://github.com/Synthxyl704/wnotreadyyetsorry:(
+git clone https://github.com/Synthxyl704/notReadyYet // :L
 ```
 
 !IMPORTANT!
@@ -35,7 +35,13 @@ Yes, ARGVTD will store the original resolution and the modified resolution of th
 
 #### Why should I use your project instead of just downloading from the site itself?
 
-I plan on allowing image rescalings without quality loss, multiple file extension types flexibility, etc. from the terminal itself, will be pretty hand for you if you wish to not go through the hassle of manually downloading everything then again going to another site for rescaling and stuff.
+I plan on:
+-> allowing image rescalings without quality loss
+-> multiple file extension types flexibility, etc. from the terminal itself
+-> openCV integrations for image editions and rescalings
+-> ./more
+
+will be pretty hand for you if you wish to not go through the hassle of manually downloading everything then again going to another site for rescaling and stuff.
 
 #### Why is it still incomplete?
 
