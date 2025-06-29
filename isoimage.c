@@ -7,16 +7,18 @@
 #include "magickwand.h"
 
 int imageUseCounter = 1;
+
 char bufferForFileName[0x7F];
 char buffer2ForFileNameVerification[0x7F];
 char bufferForResizedFileName[0x7F];
+char bufferForGSC_FileName[0x7F];
 
 int main(int argc, char **argv) {
   char siteImgURL[0x400];     // going to store the site URL here
   char *resolution = NULL;    // will store the resolution string from argv[2]
 
   // logic for not overrwriting the exisitng file, instead make another one while retaining previous ones
-  while (1) {
+  while (1 == 1) {
     snprintf(buffer2ForFileNameVerification, sizeof(buffer2ForFileNameVerification), "./iso[%d].jpg", imageUseCounter);
     if (access(buffer2ForFileNameVerification, F_OK) != 0) {
       break;
@@ -25,7 +27,7 @@ int main(int argc, char **argv) {
     }
   }
 
-  // unused
+  // pretty shitty
   const char *ext = strrchr(argv[1] ? argv[1] : "", '.');
   if (!ext || !(strcmp(ext, ".jpg") == 0 || strcmp(ext, ".jpeg") == 0 || strcmp(ext, ".png") == 0)) {
     ext = ".jpg";
@@ -35,6 +37,8 @@ int main(int argc, char **argv) {
   snprintf(bufferForFileName, sizeof(bufferForFileName), "./iso[%d]%s", imageUseCounter, ext);
   const char *outputFilename = bufferForFileName;
 
+  snprintf(bufferForGSC_FileName, sizeof(bufferForGSC_FileName), "./iso[%d]_GSCd%s", imageUseCounter, ext);
+
   if (argc > 2) {
     snprintf(bufferForResizedFileName, sizeof(bufferForResizedFileName), "./iso[%d]_resized%s", imageUseCounter, ext);
   }
@@ -43,26 +47,41 @@ int main(int argc, char **argv) {
   FILE *filePointer;
   CURLcode response;
 
-  // main argument parsing
   if (argc > 1) {
     strncpy(siteImgURL, argv[1], sizeof(siteImgURL) - 1);  // copy argv[1] (link) into siteImgURL buffer
     siteImgURL[sizeof(siteImgURL) - 1] = '\0';              
 
     if (argc > 2) {
-      resolution = argv[2];  // argv[2] = resolution in format "WIDTHxHEIGHT"
+      resolution = argv[2];                                // argv[2] = resolution in format "WIDTHxHEIGHT"
       printf("\n -> std:resolution_requested:::[%s] <-\n", resolution);
     }
+
+    if (argc > 3) {
+      if (strcasecmp(argv[3], "GSC") == 0) {
+        const char *inputForGSC = (resolution != NULL) ? bufferForResizedFileName : outputFilename;
+        if (grayscaleImage(inputForGSC, bufferForGSC_FileName) == EXIT_SUCCESS) {
+          printf("std:grayscale_successful::[%s]\n", bufferForGSC_FileName);
+        } else {
+          fprintf(stderr, "std:grayscale_failed\n");
+        }
+    } 
   } else {
-    fprintf(stderr, "%s", "std:file_inclusion_error:::include_argv[1]=true\n");  
+      printf("std:grayscale_skipped::argv[3]!=GSC'\n");
+    }
+  }
+   else {
+    fprintf(stderr, "%s", "std:file_inclusion_error:::include_argv[1]=true\n"); 
+
     // follows my compiler error format | [:] program standard | [:::] amelioration tweak string
     // fprintf(stderr, "std:usage=%s_<image_url>_[optional]-reisize_res_ints\n", argv[0]);         
     // github repo will have the tutorial thingy
+
     return EXIT_FAILURE;
   }
 
   curl = curl_easy_init();
   if (curl != NULL) {
-    filePointer = fopen(outputFilename, "wb"); // fopen(file, readtype); here wb = web binary format
+    filePointer = fopen(outputFilename, "wb");                             // fopen(file, readtype); here wb = web binary format
     if (!filePointer) {
       // perror("std:fatal_file_error:::fileinclude==true");
       fprintf(stderr, "%s", "std:fatal_file_read_error:::fileToRead!=NULL\n");
@@ -96,7 +115,8 @@ int main(int argc, char **argv) {
 
       // what if res = specified?
       if (resolution != NULL) {
-        printf("std:processing_resize::resolution_appliedValueParameters:[%s]\n", resolution);  // as a string LOL :skull:
+        printf("\nstd:processing_resize::resolution_appliedValueParameters:[%s]\n\n", resolution);  // as a string LOL :skull:
+        
         if (resizeImage(outputFilename, bufferForResizedFileName, resolution) == EXIT_SUCCESS) {
           // remove(outputFilename);
           // printf("std:original_replaced:::kept only resized version\n");
