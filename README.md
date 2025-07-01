@@ -42,10 +42,10 @@ Yes, ARGVTD will store the original resolution and the modified resolution of th
 #### Why should I use your project instead of just downloading from the site itself?
 
 I plan on:
--> allowing image rescalings without quality loss
--> multiple file extension types flexibility, etc. from the terminal itself
--> openCV integrations for image editions and rescalings
--> ./more
+-> allowing image rescalings without quality loss <br>
+-> multiple file extension types flexibility, etc. from the terminal itself <br>
+-> openCV integrations for image editions and rescalings <br>
+-> ./more <br>
 
 will be pretty handy for you if you wish to not go through the hassle of manually downloading everything then again going to another site for rescaling and stuff.
 
