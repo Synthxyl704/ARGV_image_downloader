@@ -3,6 +3,7 @@
 A fun C project I wrote for extending my knowledge in network programming and client URL handlings and stuff.
 Very, VERY easy to use terminal based image downloader using argument vector(s) straight into your required directory.
 
+### WARNING! - Please be cautious about what imagef you install and verify credibility of the site before download conduction.
 
 ## Linux/Terminal running commands and important notice[s]
 
@@ -44,7 +45,6 @@ Yes, ARGVTD will store the original resolution and the modified resolution of th
 I plan on:
 -> allowing image rescalings without quality loss <br>
 -> multiple file extension types flexibility, etc. from the terminal itself <br>
--> openCV integrations for image editions and rescalings <br>
 -> ./more <br>
 
 will be pretty handy for you if you wish to not go through the hassle of manually downloading everything then again going to another site for rescaling and stuff.
