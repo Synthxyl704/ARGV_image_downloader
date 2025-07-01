@@ -9,7 +9,7 @@ Very, VERY easy to use terminal based image downloader using argument vector(s) 
 Clone the project using this command onto bash:
 
 ```bash
-git clone https://github.com/Synthxyl704/notReadyYet // :L
+git clone https://github.com/Synthxyl704/ARGV_image_downloader
 ```
 
 !IMPORTANT!
@@ -29,7 +29,7 @@ Linux terminal:
 
 ARGVTD stand error notational expository:
 ```
-//follows my ARX compiler error format created by me for readability and easier intrinsic debugging
+// follows my ARX compiler error format created by me for readability and easier intrinsic debugging
 | [:] program standard | [::] program + argv/user standard | [:::] amelioration/debug tweak string       
 ```
 
