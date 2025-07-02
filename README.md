@@ -56,8 +56,8 @@ Suggestions and stuff is always recommended, please do send me those, if I am al
 
 ## Log for bug fixes - 28-29/6/25
 
--> added extension support for jpg/jpeg/png in isoimage.c
+-> added extension support for jpg/jpeg/png in isoimage.c<br>
 -> replaced OpenCV integrations with Magickwand instead<br>
--> `argv[3]` now handles parsed permutation combinations for GSC
+-> `argv[3]` now handles parsed permutation combinations for GSC<br>
 
 <hr>
