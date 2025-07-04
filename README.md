@@ -3,7 +3,7 @@
 A fun C project I wrote for extending my knowledge in network programming and client URL handling(s) stuff.
 Very, VERY easy to use terminal based image downloader using argument vector(s) straight into your required directory.
 
-> [!WARN]
+> [!WARNING]
 > Please be cautious about what image(s) you install and verify credibility of the site before download conduction.
 
 ## Linux/Terminal running commands and important notice[s]
