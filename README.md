@@ -4,7 +4,7 @@ A fun C project I wrote for extending my knowledge in network programming and cl
 Very, VERY easy to use terminal based image downloader using argument vector(s) straight into your required directory.
 
 ## ARGVTD working features and manual guide
-- Terminal based imagery downloading straight into your `FILE*` set directory.
+- Terminal based imagery downloading straight into your `FILE*` set path directory.
 - 
 
 > [!WARNING]
@@ -42,15 +42,18 @@ ARGVTD stand error notational expository:
 #### Why should I use your project instead of just downloading from the site itself?
 
 I plan on:
--> allowing image rescalings without quality loss <br>
--> multiple file extension types flexibility, etc. from the terminal itself <br>
+-> allowing raster types -> SVG/vector types conversion <br>
+-> multiple file extension types flexibility, etc. from the terminal itself instead of manual configuration <br>
 -> ./more <br>
 
-will be pretty handy for you if you wish to not go through the hassle of manually downloading everything then again going to another site for rescaling and stuff.
+Will be pretty handy for you if you wish to: <br>
+-> not go through manual downloading from sites
+-> immediately download the image you want to a set resolution you wish from terminal itself
+-> not waste your time configuring extension names (yes every second counts)
 
 #### Why is it only partially complete?
 
-I started this project on 18th June as a means to extend my knowledge on basic client URL handling and network programming during my 1st year in university.
+I started this project on 18th June as a means to extend my knowledge on basic client URL handling and network programming during my 1st year in university and to prepare for my next subjects.
 Suggestions and stuff is always recommended, please do send me those, if I am alive I will definitely read and reply to your suggestion(s)/comment(s)/note(s).
 
 ## Log for bug fixes - 5/7/25
