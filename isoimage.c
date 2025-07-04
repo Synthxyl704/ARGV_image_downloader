@@ -6,12 +6,28 @@
 #include "curl_utils.h"
 #include "magickwand.h"
 
+// !CHECK GITHUB README FOR ARGVTD FOR KNOWING THE ERROR/PRINT FORMAT USED!//
+
 int imageUseCounter = 1;
 
 char bufferForFileName[0x7F];
 char buffer2ForFileNameVerification[0x7F];
 char bufferForResizedFileName[0x7F];
 char bufferForGSC_FileName[0x7F];
+
+// --------------- VPRINTF --------------- //
+
+// void vSTAT(const char *formatString, ...) {
+//   va_list args;
+//   va_start(args, formatString);
+//   vprintf(formatString, args);
+
+//   va_end(args);
+// }
+
+// wait what???
+typedef int (*printf_ptr)(const char *, ...);
+printf_ptr vSTAT = printf;
 
 int main(int argc, char **argv) {
   char siteImgURL[0x400];     // going to store the site URL here
@@ -27,10 +43,10 @@ int main(int argc, char **argv) {
     }
   }
 
-  // pretty shitty
+  // dont ask me what i was on while writing this
   const char *ext = strrchr(argv[1] ? argv[1] : "", '.');
   if (!ext || !(strcmp(ext, ".jpg") == 0 || strcmp(ext, ".jpeg") == 0 || strcmp(ext, ".png") == 0)) {
-    ext = ".jpg";
+    ext = ".jpg"; // png later?
   }
 
   // set the output filename (retain original buffer for actual writing for no reason)
@@ -49,35 +65,95 @@ int main(int argc, char **argv) {
 
   if (argc > 1) {
     strncpy(siteImgURL, argv[1], sizeof(siteImgURL) - 1);  // copy argv[1] (link) into siteImgURL buffer
-    siteImgURL[sizeof(siteImgURL) - 1] = '\0';              
+    siteImgURL[sizeof(siteImgURL) - 1] = '\0';             // not risking it 
 
     if (argc > 2) {
-      resolution = argv[2];                                // argv[2] = resolution in format "WIDTHxHEIGHT"
-      printf("\n -> std:resolution_requested:::[%s] <-\n", resolution);
+      resolution = argv[2];                                // argv[2] = resolution in format "WIDTHxHEIGHT" only
+      // printf("\n -> std:resolution_requested:::[%s] <-\n", resolution);
+      vSTAT("-> std:resolution_requested:::[%s] <-\n", resolution);
     }
 
     if (argc > 3) {
       if (strcasecmp(argv[3], "GSC") == 0) {
         const char *inputForGSC = (resolution != NULL) ? bufferForResizedFileName : outputFilename;
         if (grayscaleImage(inputForGSC, bufferForGSC_FileName) == EXIT_SUCCESS) {
-          printf("std:grayscale_successful::[%s]\n", bufferForGSC_FileName);
-        } else {
-          fprintf(stderr, "std:grayscale_failed\n");
-        }
+          // printf("std:grayscale_successful::[%s]\n", bufferForGSC_FileName);
+          vSTAT("std:grayscale_successful::[%s]\n", bufferForGSC_FileName);        
+        } 
+      } else if (strcasecmp(argv[3], "GSC=NULL") == 0) {
+        vSTAT("\nstd:grayscale_function::user_status_set=NULL\n");
+      } else {
+        fprintf(stderr, "std:GSC_ARGV[%d]_parse_error:::set_GSC_status=valid",  0 + 3);
+      }
     } 
-  } else {
-      printf("std:grayscale_skipped::argv[3]!=GSC'\n");
+
+    if (argc > 4) {
+    const char *validExtension[] = {"jpg", "jpeg", "png", "svg"};
+    const char *userInputtedExtensionRaw = argv[4]; 
+
+    if (userInputtedExtensionRaw[0] == '.') {
+      userInputtedExtensionRaw += 1;
+    }
+
+    int isValid = false;
+
+    for (int inc = 0; inc < sizeof(validExtension) / sizeof(validExtension[0]); ++inc) {
+      if (strcasecmp(userInputtedExtensionRaw, validExtension[inc]) == 0) {
+        isValid = true;
+        break;
+      }
+    }
+
+    if (isValid == true) {
+      const char *originalFile = argv[1];       
+
+      // this may get confusing
+      // basically at compile/runtime (idk which ones the correct term), argv[1] has already transmutated into a "FILE* [x] = "~/<path>";
+      // char *originalFile = argv[1]; saves the original image path to itself
+      // so it is essentially pointing to the path again which is already saved into your directory of storage
+      // that is why you dont directly mess with siteImgURL because it has already been converted to a path by FILE*
+      // if messed with, it will cause alot of breakings since URLs dont usually contains slashes 
+      // and will cause conditional extension invalidation
+
+      const char *lastSlash = strrchr(originalFile, '/');                            // check for the LAST [/] to occur
+      const char *fileNameOnly = ((lastSlash) ? lastSlash + 1 : originalFile);       // want to isolate the fileName only? lastSlash + 1 = filename!
+
+      // index:       0   1   2   3   4   5   6
+      // character:   s   e   x   .   p   n   g
+      // pointerLoc:  ↑           ↑
+      //        fileNameOnly    dot (at index 3)
+      //        (points here! because ~/path/anotherPath/sex.png, we only want it to count until last slash ie until (s)  
+
+      // current [.<user_file_extens^n] -> [.<argv[4]>] conversion
+      const char *dot = strrchr(fileNameOnly, '.');                                  // replace only the text >last_dot 
+      size_t baseLength = dot ? (size_t)(dot - fileNameOnly) : strlen(fileNameOnly); // pointer arithmetic!!!1!
+
+      char modifiedFileName[0x100];
+      snprintf(modifiedFileName, sizeof(modifiedFileName), "./iso[%d]_modifiedEXT.%s", imageUseCounter, userInputtedExtensionRaw);
+
+      vSTAT("std:user_extension_override::[%s] => [%s]\n", fileNameOnly, modifiedFileName);
+
+      // UNCOMMENT THIS IF YOU WANT TO OVERWRITE THE ORIGINAL SAVED IMAGE!
+      // snprintf(bufferForFileName, sizeof(bufferForFileName), "%s", modifiedFileName);
+    } else {
+      fprintf(stderr, "std:invalid_extension_requested::[%s]\n", argv[4]);
     }
   }
+  
    else {
     fprintf(stderr, "%s", "std:file_inclusion_error:::include_argv[1]=true\n"); 
-
-    // follows my compiler error format | [:] program standard | [:::] amelioration tweak string
-    // fprintf(stderr, "std:usage=%s_<image_url>_[optional]-reisize_res_ints\n", argv[0]);         
-    // github repo will have the tutorial thingy
-
     return EXIT_FAILURE;
+   }
   }
+
+  // TEMPORARY
+
+  vSTAT("\n");
+
+  for (int inc = 0; inc <= argc; inc += 1) {
+    vSTAT("[%s]\n", argv[inc]);
+  }
+
 
   curl = curl_easy_init();
   if (curl != NULL) {
@@ -105,17 +181,21 @@ int main(int argc, char **argv) {
       fprintf(stderr, "std:download_failure::[%s]\n", curl_easy_strerror(response));
       curl_easy_cleanup(curl);
       return EXIT_FAILURE;
-    } else if (http_code != 200) {
-      fprintf(stderr, "std:http_error::http_code_[%ld]\n", http_code);
+    } 
+    
+    else if (http_code != 200) {
+      fprintf(stderr, "std:http_error::http_code=[%ld]\n", http_code);
       curl_easy_cleanup(curl);
       return EXIT_FAILURE;
-    } else {
-      // FILE *testFile = fopen(outputFilename, "rb");
-      printf("\nstd:download_successful::[%s]\n", outputFilename);
+    } 
+    
+    else {
+      // FILE *testFile = fopen(outputFilename, "rb");  // read binary
+      vSTAT("std:download_successful::[%s]\n", outputFilename);
 
       // what if res = specified?
       if (resolution != NULL) {
-        printf("\nstd:processing_resize::resolution_appliedValueParameters:[%s]\n\n", resolution);  // as a string LOL :skull:
+        vSTAT("std:processing_resize::resolution_appliedValueParameters:[%s]\n", resolution);  // as a string LOL :skull:
         
         if (resizeImage(outputFilename, bufferForResizedFileName, resolution) == EXIT_SUCCESS) {
           // remove(outputFilename);
