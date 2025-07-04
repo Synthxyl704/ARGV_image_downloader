@@ -3,6 +3,10 @@
 A fun C project I wrote for extending my knowledge in network programming and client URL handling(s) stuff.
 Very, VERY easy to use terminal based image downloader using argument vector(s) straight into your required directory.
 
+## ARGVTD working features and manual guide
+- Terminal based imagery downloading straight into your `FILE*` set directory.
+- 
+
 > [!WARNING]
 > Please be cautious about what image(s) you install and verify credibility of the site before download conduction.
 
@@ -35,10 +39,6 @@ ARGVTD stand error notational expository:
 
 ## Definitely not FAQs again
 
-#### Can it support image rescales?
-
-Yes, ARGVTD will store the original resolution and the modified resolution of the image to the file pointer directory you have set it in.
-
 #### Why should I use your project instead of just downloading from the site itself?
 
 I plan on:
@@ -53,10 +53,11 @@ will be pretty handy for you if you wish to not go through the hassle of manuall
 I started this project on 18th June as a means to extend my knowledge on basic client URL handling and network programming during my 1st year in university.
 Suggestions and stuff is always recommended, please do send me those, if I am alive I will definitely read and reply to your suggestion(s)/comment(s)/note(s).
 
-## Log for bug fixes - 28-29/6/25
+## Log for bug fixes - 5/7/25
 
--> added extension support for jpg/jpeg/png in isoimage.c<br>
--> replaced OpenCV integrations with Magickwand instead<br>
--> `argv[3]` now handles parsed permutation combinations for GSC<br>
+-> Custom `vSTAT()` subsitution for `printf();` <br>
+-> Increased readablity of code <br>
+-> Added support for `argv[4]` which parses dot extensions of graphic files more easily as per user requirement <br>
+-> `argv[3]` can now parse 2 string arguments for grayscaling, parse `GSC` for grayscaling on your img and `GSC=NULL` for turning it off <br>
 
 <hr>
