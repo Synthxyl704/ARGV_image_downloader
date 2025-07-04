@@ -4,16 +4,16 @@ A fun C project I wrote for extending my knowledge in network programming and cl
 Very, VERY easy to use terminal based image downloader using argument vector(s) straight into your required directory.
 
 ## ARGVTD working features and manual guide
-- Terminal based imagery downloading straight into your `FILE*` set path directory.
-- 
-
-> [!WARNING]
-> Please be cautious about what image(s) you install and verify credibility of the site before download conduction.
+- Terminal based imagery downloading straight into your `FILE*` set path directory. <br>
+- Custom image resolution set from the terminal itself [WIDTHxHEIGHT]
+- Grayscaling option
+- Multi file extension support
+- (to be added) | Raster -> Vector conversions
+- (to be added) | Custom file extensions
 
 ## Linux/Terminal running commands and important notice[s]
 
 Clone the project using this command onto bash:
-
 ```bash
 git clone https://github.com/Synthxyl704/ARGV_image_downloader
 ```
@@ -47,9 +47,9 @@ I plan on:
 -> ./more <br>
 
 Will be pretty handy for you if you wish to: <br>
--> not go through manual downloading from sites
--> immediately download the image you want to a set resolution you wish from terminal itself
--> not waste your time configuring extension names (yes every second counts)
+-> not go through manual downloading from sites <br>
+-> immediately download the image you want to a set resolution you wish from terminal itself <br>
+-> not waste your time configuring extension names (yes every second counts) <br>
 
 #### Why is it only partially complete?
 
