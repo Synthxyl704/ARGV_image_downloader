@@ -6,7 +6,7 @@
 #include "curl_utils.h"
 #include "magickwand.h"
 
-// !CHECK GITHUB README FOR ARGVTD FOR KNOWING THE ERROR/PRINT FORMAT USED!//
+// !CHECK GITHUB README FOR ARGVTD FOR KNOWING THE ERROR/PRINT FORMAT USED! //
 
 int imageUseCounter = 1;
 
@@ -15,17 +15,6 @@ char buffer2ForFileNameVerification[0x7F];
 char bufferForResizedFileName[0x7F];
 char bufferForGSC_FileName[0x7F];
 
-// --------------- VPRINTF --------------- //
-
-// void vSTAT(const char *formatString, ...) {
-//   va_list args;
-//   va_start(args, formatString);
-//   vprintf(formatString, args);
-
-//   va_end(args);
-// }
-
-// wait what???
 typedef int (*printf_ptr)(const char *, ...);
 printf_ptr vSTAT = printf;
 
@@ -65,7 +54,7 @@ int main(int argc, char **argv) {
 
   if (argc > 1) {
     strncpy(siteImgURL, argv[1], sizeof(siteImgURL) - 1);  // copy argv[1] (link) into siteImgURL buffer
-    siteImgURL[sizeof(siteImgURL) - 1] = '\0';             // not risking it 
+    siteImgURL[sizeof(siteImgURL) - 1] = '\0';             // not risking it
 
     if (argc > 2) {
       resolution = argv[2];                                // argv[2] = resolution in format "WIDTHxHEIGHT" only
@@ -88,7 +77,7 @@ int main(int argc, char **argv) {
     } 
 
     if (argc > 4) {
-    const char *validExtension[] = {"jpg", "jpeg", "png", "svg"};
+    const char *validExtension[] = {"jpg", "jpeg", "png", "svg", "tiff", "webp", "heif", "heic", "xcf", "exif"};
     const char *userInputtedExtensionRaw = argv[4]; 
 
     if (userInputtedExtensionRaw[0] == '.') {
@@ -122,7 +111,7 @@ int main(int argc, char **argv) {
       // character:   s   e   x   .   p   n   g
       // pointerLoc:  ↑           ↑
       //        fileNameOnly    dot (at index 3)
-      //        (points here! because ~/path/anotherPath/sex.png, we only want it to count until last slash ie until (s)  
+      //        (points here!) because ~/path/anotherPath/sex.png, we only want it to count until last slash ie until (s)  
 
       // current [.<user_file_extens^n] -> [.<argv[4]>] conversion
       const char *dot = strrchr(fileNameOnly, '.');                                  // replace only the text >last_dot 
@@ -135,30 +124,40 @@ int main(int argc, char **argv) {
 
       // UNCOMMENT THIS IF YOU WANT TO OVERWRITE THE ORIGINAL SAVED IMAGE!
       // snprintf(bufferForFileName, sizeof(bufferForFileName), "%s", modifiedFileName);
-    } else {
+    }
+
+    else {
       fprintf(stderr, "std:invalid_extension_requested::[%s]\n", argv[4]);
     }
   }
+
+  if (argc > 5) {
+    if (strcasecmp(argv[5], "ls_argv") == 0) {
+      vSTAT("\n\n");
+
+      for (int inc = 0; inc <= argc; inc += 1) {
+        vSTAT("std:argv[%d]: [%s]\n", inc, argv[inc]);
+      }
+
+      vSTAT("\n\n");
+    }
+  }
   
-   else {
+  else {
     fprintf(stderr, "%s", "std:file_inclusion_error:::include_argv[1]=true\n"); 
     return EXIT_FAILURE;
-   }
   }
+} 
 
-  // TEMPORARY
-
-  vSTAT("\n");
-
-  for (int inc = 0; inc <= argc; inc += 1) {
-    vSTAT("[%s]\n", argv[inc]);
+  else if (argv[1] == NULL || !argv[1]) {
+    vSTAT("std:download_failure::argv[1]=siteURL=NULL:::siteURL=valid");
+    return EXIT_FAILURE;
   }
-
 
   curl = curl_easy_init();
   if (curl != NULL) {
     filePointer = fopen(outputFilename, "wb");                             // fopen(file, readtype); here wb = web binary format
-    if (!filePointer) {
+    if (!filePointer || filePointer == NULL) {
       // perror("std:fatal_file_error:::fileinclude==true");
       fprintf(stderr, "%s", "std:fatal_file_read_error:::fileToRead!=NULL\n");
       curl_easy_cleanup(curl);
