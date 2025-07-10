@@ -52,11 +52,11 @@ int main(int argc, char **argv) {
   FILE *filePointer;
   CURLcode response;
 
-  if (argc > 1) {
+  if (!(!argc > 1)) {
     strncpy(siteImgURL, argv[1], sizeof(siteImgURL) - 1);  // copy argv[1] (link) into siteImgURL buffer
     siteImgURL[sizeof(siteImgURL) - 1] = '\0';             // not risking it
 
-    if (argc > 2) {
+    if (argc > 2 && argv[2] != NULL && !(argv[2] < 0)) {
       resolution = argv[2];                                // argv[2] = resolution in format "WIDTHxHEIGHT" only
       // printf("\n -> std:resolution_requested:::[%s] <-\n", resolution);
       vSTAT("-> std:resolution_requested:::[%s] <-\n", resolution);
@@ -72,7 +72,7 @@ int main(int argc, char **argv) {
       } else if (strcasecmp(argv[3], "GSC=NULL") == 0) {
         vSTAT("\nstd:grayscale_function::user_status_set=NULL\n");
       } else {
-        fprintf(stderr, "std:GSC_ARGV[%d]_parse_error:::set_GSC_status=valid",  0 + 3);
+        fprintf(stderr, "std:GSC_ARGV[%d]:::set_GSC_status=valid",  0 + 3);
       }
     } 
 
@@ -114,13 +114,13 @@ int main(int argc, char **argv) {
       //        (points here!) because ~/path/anotherPath/sex.png, we only want it to count until last slash ie until (s)  
 
       // current [.<user_file_extens^n] -> [.<argv[4]>] conversion
-      const char *dot = strrchr(fileNameOnly, '.');                                  // replace only the text >last_dot 
+      const char *dot = strrchr(fileNameOnly, '.');                                  // replace only the text [>last_dot] 
       size_t baseLength = dot ? (size_t)(dot - fileNameOnly) : strlen(fileNameOnly); // pointer arithmetic!!!1!
 
-      char modifiedFileName[0x100];
+      char modifiedFileName[0x7F];
       snprintf(modifiedFileName, sizeof(modifiedFileName), "./iso[%d]_modifiedEXT.%s", imageUseCounter, userInputtedExtensionRaw);
 
-      vSTAT("std:user_extension_override::[%s] => [%s]\n", fileNameOnly, modifiedFileName);
+      vSTAT("\nstd:user_extension_override::[%s] => [%s]\n", fileNameOnly, modifiedFileName);
 
       // UNCOMMENT THIS IF YOU WANT TO OVERWRITE THE ORIGINAL SAVED IMAGE!
       // snprintf(bufferForFileName, sizeof(bufferForFileName), "%s", modifiedFileName);
@@ -150,7 +150,8 @@ int main(int argc, char **argv) {
 } 
 
   else if (argv[1] == NULL || !argv[1]) {
-    vSTAT("std:download_failure::argv[1]=siteURL=NULL:::siteURL=valid");
+    fprintf(stderr, "%s", "std:CURL_initialization_failure:::CURL!=NULL\n");
+    vSTAT("\nstd:download_failure::argv[1]=siteURL=NULL:::siteURL=valid\n");
     return EXIT_FAILURE;
   }
 
@@ -167,7 +168,7 @@ int main(int argc, char **argv) {
     curl_easy_setopt(curl, CURLOPT_URL, siteImgURL);                       // basically goes to argv[1] site
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeDataToLocalFile);   // saves the data from argv[1] to wDTLF 
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, filePointer);                // stores the data to the local filePointer i put
-    curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);                    // need to follow redirects to the argv[1]?
+    curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);                    // need to follow redirects to the argv[1] incase of disturbances
 
     response = curl_easy_perform(curl); // does everything
 
@@ -184,6 +185,7 @@ int main(int argc, char **argv) {
     
     else if (http_code != 200) {
       fprintf(stderr, "std:http_error::http_code=[%ld]\n", http_code);
+      
       curl_easy_cleanup(curl);
       return EXIT_FAILURE;
     } 
@@ -199,7 +201,12 @@ int main(int argc, char **argv) {
         if (resizeImage(outputFilename, bufferForResizedFileName, resolution) == EXIT_SUCCESS) {
           // remove(outputFilename);
           // printf("std:original_replaced:::kept only resized version\n");
+        } else if (resolution < 0 || resolution == NULL) {
+          
         }
+      } else if (resolution < 0 || resolution == NULL) {
+        vSTAT("-> std:resolution_requested_is_invalid=[%s]:::format=[WIDTHxHEIGHT] <-\n", resolution);
+        return EXIT_FAILURE;
       }
     }
 
