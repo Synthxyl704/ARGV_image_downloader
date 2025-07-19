@@ -29,8 +29,6 @@ ARGVTD stand error notational expository:
 ```
 // follows my ARX compiler error format created by me for readability and easier intrinsic debugging
 | [:] program standard                  |
-
-
 | [::] program + argv/user standard     | 
 | [:::] amelioration/debug tweak string |       
 ```
