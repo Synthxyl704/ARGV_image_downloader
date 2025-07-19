@@ -18,12 +18,6 @@ Clone the project using this command onto bash:
 git clone https://github.com/Synthxyl704/ARGV_image_downloader
 ```
 
-> [!IMPORTANT]
-> Remember to change the file pointer to the actual directory you want to store the image to!
-> ```bash
->  FILE *filePointer = "~./example/directory/here"
-> ```
-
 Linux terminal:
 ```
 -> cd <directory_of_storage>
